@@ -61,7 +61,6 @@ dependencies {
     // Kotlin coroutines dependencies
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
-    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2"
 
     // Moshi dependencies
     implementation "com.squareup.moshi:moshi:$moshi_version"

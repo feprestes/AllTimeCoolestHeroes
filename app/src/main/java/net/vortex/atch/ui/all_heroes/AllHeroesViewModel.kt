@@ -7,13 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import net.vortex.atch.data.ApiResponse
-import net.vortex.atch.data.Result
 import net.vortex.atch.network.Api
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.lang.Exception
 
 class AllHeroesViewModel : ViewModel() {
 
@@ -26,7 +20,7 @@ class AllHeroesViewModel : ViewModel() {
 
     private var viewModelJob = Job()
 
-    private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main )
+    private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
         getCharacters()
@@ -34,11 +28,11 @@ class AllHeroesViewModel : ViewModel() {
 
     private fun getCharacters() {
         coroutineScope.launch {
-            var getCharactersDeferred = Api.retrofitService.getData()
+            var getCharactersData = Api.retrofitService.getData()
             try {
-                var listResult = getCharactersDeferred.await()
+                var listResult = getCharactersData
                 _response.value = "Success: ${listResult.data.results.size} results"
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 _response.value = "Failure: ${e.message}"
             }
         }

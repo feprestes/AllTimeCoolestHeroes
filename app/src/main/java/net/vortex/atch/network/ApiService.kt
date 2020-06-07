@@ -1,14 +1,10 @@
 package net.vortex.atch.network
 
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import kotlinx.coroutines.Deferred
 import net.vortex.atch.BuildConfig
 import net.vortex.atch.data.ApiResponse
-import net.vortex.atch.data.Result
 import net.vortex.atch.util.hashGenerator
-import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
@@ -33,20 +29,19 @@ private val moshi = Moshi.Builder()
 
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(MoshiConverterFactory.create())
-    .addCallAdapterFactory(CoroutineCallAdapterFactory())
     .baseUrl(BASE_URL)
     .build()
 
 interface ApiService {
     @GET("characters")
-    fun getData(
+    suspend fun getData(
         @Query("ts") ts: String = time_stamp,
         @Query("apikey") apikey: String = API_PUB_KEY,
         @Query("hash") hash: String = hash_code,
         @Query("limit") limit: Int = API_LIMIT,
         @Query("offset") offset: Int = API_OFFSET
-        ):
-            Deferred<ApiResponse>
+    ):
+            ApiResponse
 }
 
 object Api {
