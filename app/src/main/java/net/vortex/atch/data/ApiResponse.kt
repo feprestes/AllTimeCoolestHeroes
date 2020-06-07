@@ -10,6 +10,7 @@ data class ApiResponse(
     val attributionText: String,
     val code: Int,
     val copyright: String,
+    @Json(name = "data")
     val `data`: Data,
     val etag: String,
     val status: String

@@ -3,6 +3,8 @@ package net.vortex.atch.ui.all_heroes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import net.vortex.atch.data.ApiResponse
+import net.vortex.atch.data.Result
 import net.vortex.atch.network.Api
 import retrofit2.Call
 import retrofit2.Callback
@@ -23,13 +25,13 @@ class AllHeroesViewModel : ViewModel() {
 
     private fun getCharacters() {
         Api.retrofitService.getData().enqueue(
-            object : Callback<String> {
-                override fun onFailure(call: Call<String>, t: Throwable) {
+            object : Callback<ApiResponse> {
+                override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
                     _response.value = "Failure: " + t.message
                 }
 
-                override fun onResponse(call: Call<String>, response: Response<String>) {
-                    _response.value = response.body()
+                override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
+                    _response.value = "Success: ${response.body()?.data?.results?.size} results"
                 }
 
             })
