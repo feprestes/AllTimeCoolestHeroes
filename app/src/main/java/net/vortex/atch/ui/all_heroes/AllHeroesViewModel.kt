@@ -27,9 +27,10 @@ class AllHeroesViewModel : ViewModel() {
     }
 
     private fun getCharacters() {
+        _response.value = "Loading..."
         coroutineScope.launch {
-            var getCharactersData = Api.retrofitService.getData()
             try {
+                var getCharactersData = Api.retrofitService.getData()
                 var listResult = getCharactersData
                 _response.value = "Success: ${listResult.data.results.size} results"
             } catch (e: Exception) {
