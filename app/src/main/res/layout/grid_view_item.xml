@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="viewModel"
-            type="net.vortex.atch.ui.all_heroes.AllHeroesViewModel" />
+            name="character"
+            type="net.vortex.atch.data.Result" />
     </data>
 
     <ImageView
@@ -16,6 +16,6 @@
         android:scaleType="centerCrop"
         android:adjustViewBounds="true"
         android:padding="2dp"
-        app:imageUrl="@{viewModel.characterImg}"
+        app:imageUrl="@{character.thumbnail.path + `.` + character.thumbnail.extension}"
         tools:src="@tools:sample/backgrounds/scenic"/>
 </layout>
