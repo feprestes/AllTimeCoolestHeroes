@@ -9,25 +9,32 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import net.vortex.atch.R
+import net.vortex.atch.databinding.FragmentAllHeroesBinding
+import net.vortex.atch.databinding.GridViewItemBinding
 
 class AllHeroesFragment : Fragment() {
 
-    private lateinit var allHeroesViewModel: AllHeroesViewModel
+    private val allHeroesViewModel by lazy {
+        ViewModelProviders.of(this).get(AllHeroesViewModel::class.java)
+    }
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        allHeroesViewModel =
-                ViewModelProviders.of(this).get(AllHeroesViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_all_heroes, container, false)
-        val textView: TextView = root.findViewById(R.id.text_all_heroes)
-        allHeroesViewModel.response.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
-        return root
+//        val binding = FragmentAllHeroesBinding.inflate(inflater)
+
+        val binding = GridViewItemBinding.inflate(inflater)
+
+        binding.setLifecycleOwner(this)
+
+        binding.viewModel = allHeroesViewModel
+
+        setHasOptionsMenu(true)
+        return binding.root
     }
 }
