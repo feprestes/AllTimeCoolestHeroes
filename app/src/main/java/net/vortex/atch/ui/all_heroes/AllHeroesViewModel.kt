@@ -10,18 +10,20 @@ import kotlinx.coroutines.launch
 import net.vortex.atch.data.Result
 import net.vortex.atch.network.Api
 
+enum class ApiStatus { LOADING, ERROR, DONE }
+
 class AllHeroesViewModel : ViewModel() {
 
     // Internal MuttableLiveData that stores the most recent response
     private val _characters = MutableLiveData<List<Result>>()
-    private val _response = MutableLiveData<String>()
+    private val _status = MutableLiveData<ApiStatus>()
 
     // External Immutable LiveData for the response string
     val characters: LiveData<List<Result>>
         get() = _characters
 
-    val response: LiveData<String>
-        get() = _response
+    val status: LiveData<ApiStatus>
+        get() = _status
 
 
     private var viewModelJob = Job()
@@ -35,12 +37,14 @@ class AllHeroesViewModel : ViewModel() {
     private fun getCharacters() {
         coroutineScope.launch {
             try {
+                _status.value = ApiStatus.LOADING
                 var getCharactersData = Api.retrofitService.getData()
                 var listResult = getCharactersData
-                _response.value = "Success: ${listResult.data.results.size} results"
+                _status.value = ApiStatus.DONE
                 _characters.value = listResult.data.results
             } catch (e: Exception) {
-                _response.value = "Failure: ${e.message}"
+                _status.value = ApiStatus.ERROR
+                _characters.value = ArrayList()
             }
         }
     }
