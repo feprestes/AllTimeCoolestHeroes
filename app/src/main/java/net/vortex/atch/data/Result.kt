@@ -1,10 +1,13 @@
 package net.vortex.atch.data
 
 
+import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import kotlinx.android.parcel.Parcelize
 
 @JsonClass(generateAdapter = true)
+@Parcelize
 data class Result(
     val comics: Comics,
     @Json(name = "description")
@@ -21,4 +24,4 @@ data class Result(
     @Json(name = "thumbnail")
     val thumbnail: Thumbnail,
     val urls: List<Url>
-)
+) : Parcelable

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import net.vortex.atch.data.Result
 import net.vortex.atch.databinding.GridViewItemBinding
 
-class PhotoGridAdapter : ListAdapter<Result,
+class PhotoGridAdapter(private val onClickListener: OnClickListener ) : ListAdapter<Result,
         PhotoGridAdapter.CharacterViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(
@@ -24,6 +24,9 @@ class PhotoGridAdapter : ListAdapter<Result,
 
     override fun onBindViewHolder(holder: PhotoGridAdapter.CharacterViewHolder, position: Int) {
         val character = getItem(position)
+        holder.itemView.setOnClickListener {
+            onClickListener.onClick(character)
+        }
         holder.bind(character)
     }
 
@@ -46,5 +49,9 @@ class PhotoGridAdapter : ListAdapter<Result,
             binding.character = result
             binding.executePendingBindings()
         }
+    }
+
+    class OnClickListener(val clickListener: (character: Result) -> Unit) {
+        fun onClick(character: Result) = clickListener(character)
     }
 }
