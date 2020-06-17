@@ -32,6 +32,17 @@
             android:text="@{character.name}"
             android:textColor="@color/colorAccent" />
 
+        <ImageView
+            android:id="@+id/character_favorite_image"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_gravity="bottom|end"
+            android:adjustViewBounds="true"
+            android:padding="5dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_favorite"
+            tools:src="@drawable/ic_favorite"/>
+
     </FrameLayout>
 
 </layout>
