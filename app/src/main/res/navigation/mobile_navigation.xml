@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_all_heroes">
+    app:startDestination="@id/navigation_characters">
 
     <fragment
-        android:id="@+id/navigation_all_heroes"
-        android:name="net.vortex.atch.ui.all_heroes.AllHeroesFragment"
-        android:label="@string/title_all_heroes"
-        tools:layout="@layout/fragment_all_heroes" >
+        android:id="@+id/navigation_characters"
+        android:name="net.vortex.atch.ui.characters.CharactersFragment"
+        android:label="@string/title_characters"
+        tools:layout="@layout/fragment_characters" >
         <action
             android:id="@+id/action_showDetail"
             app:destination="@id/navigation_detail" />

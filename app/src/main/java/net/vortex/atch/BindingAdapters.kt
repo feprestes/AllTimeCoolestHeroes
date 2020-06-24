@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import net.vortex.atch.data.Result
-import net.vortex.atch.ui.all_heroes.ApiStatus
-import net.vortex.atch.ui.all_heroes.PhotoGridAdapter
+import net.vortex.atch.ui.characters.ApiStatus
+import net.vortex.atch.ui.characters.PhotoGridAdapter
 
 @BindingAdapter("apiStatus")
 fun bindStatus(statusImageView: ImageView, status: ApiStatus?){

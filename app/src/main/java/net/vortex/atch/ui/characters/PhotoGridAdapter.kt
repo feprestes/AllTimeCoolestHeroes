@@ -1,4 +1,4 @@
-package net.vortex.atch.ui.all_heroes
+package net.vortex.atch.ui.characters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

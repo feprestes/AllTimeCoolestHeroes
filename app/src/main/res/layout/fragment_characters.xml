@@ -7,13 +7,13 @@
 
         <variable
             name="viewModel"
-            type="net.vortex.atch.ui.all_heroes.AllHeroesViewModel" />
+            type="net.vortex.atch.ui.characters.CharactersViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.all_heroes.AllHeroesFragment">
+        tools:context=".ui.characters.CharactersFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/image_grid"

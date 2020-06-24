@@ -1,4 +1,4 @@
-package net.vortex.atch.ui.all_heroes
+package net.vortex.atch.ui.characters
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,7 +12,7 @@ import net.vortex.atch.network.Api
 
 enum class ApiStatus { LOADING, ERROR, DONE }
 
-class AllHeroesViewModel : ViewModel() {
+class CharactersViewModel : ViewModel() {
 
     // Internal MuttableLiveData that stores the most recent response
     private val _characters = MutableLiveData<List<Result>>()
