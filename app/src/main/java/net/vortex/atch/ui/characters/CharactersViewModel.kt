@@ -1,12 +1,10 @@
 package net.vortex.atch.ui.characters
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import net.vortex.atch.data.Result
 import net.vortex.atch.network.Api
 
@@ -36,17 +34,34 @@ class CharactersViewModel : ViewModel() {
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
+        if (_characters.value.isNullOrEmpty()) {
+            Log.e("IS EMPTY", _characters.value?.size.toString())
+        }
         getCharacters()
+
     }
 
     private fun getCharacters() {
         coroutineScope.launch {
             try {
                 _status.value = ApiStatus.LOADING
-                var getCharactersData = Api.retrofitService.getData()
-                var listResult = getCharactersData
-                _status.value = ApiStatus.DONE
+
+                var getCharactersData = async { Api.retrofitService.getData() }
+                var listResult = getCharactersData.await()
+
                 _characters.value = listResult.data.results
+                var apiCharacterResponseCounter = listResult.data.count
+
+                while (apiCharacterResponseCounter < listResult.data.total) {
+                    getCharactersData =
+                        async { Api.retrofitService.getData(offset = _characters.value!!.size) }
+                    listResult = getCharactersData.await()
+
+                    _characters.value = _characters.value!! + listResult.data.results
+                    apiCharacterResponseCounter = _characters.value!!.size
+                }
+
+                _status.value = ApiStatus.DONE
             } catch (e: Exception) {
                 _status.value = ApiStatus.ERROR
                 _characters.value = ArrayList()
@@ -64,7 +79,7 @@ class CharactersViewModel : ViewModel() {
     }
 
     // Marking navigation state as complete
-    fun displayCharacterDetailsComplete(){
+    fun displayCharacterDetailsComplete() {
         _navigateToSelectedCharacter.value = null
     }
 }

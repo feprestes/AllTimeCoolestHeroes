@@ -33,7 +33,8 @@ interface ApiService {
         @Query("apikey") apikey: String = API_PUB_KEY,
         @Query("hash") hash: String = hash_code,
         @Query("limit") limit: Int = API_LIMIT,
-        @Query("offset") offset: Int = API_OFFSET
+        @Query("offset") offset: Int = API_OFFSET,
+        @Query("nameStartsWith") nameStartsWith: String? = null // Added to support API searching feature
     ):
             ApiResponse
 }
