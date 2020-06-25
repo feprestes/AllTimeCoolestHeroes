@@ -34,11 +34,7 @@ class CharactersViewModel : ViewModel() {
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
-        if (_characters.value.isNullOrEmpty()) {
-            Log.e("IS EMPTY", _characters.value?.size.toString())
-        }
         getCharacters()
-
     }
 
     private fun getCharacters() {
@@ -46,16 +42,16 @@ class CharactersViewModel : ViewModel() {
             try {
                 _status.value = ApiStatus.LOADING
 
-                var getCharactersData = async { Api.retrofitService.getData() }
-                var listResult = getCharactersData.await()
+                var getCharactersData = Api.retrofitService.getData()
+                var listResult = getCharactersData
 
                 _characters.value = listResult.data.results
                 var apiCharacterResponseCounter = listResult.data.count
 
                 while (apiCharacterResponseCounter < listResult.data.total) {
                     getCharactersData =
-                        async { Api.retrofitService.getData(offset = _characters.value!!.size) }
-                    listResult = getCharactersData.await()
+                        Api.retrofitService.getData(offset = _characters.value!!.size)
+                    listResult = getCharactersData
 
                     _characters.value = _characters.value!! + listResult.data.results
                     apiCharacterResponseCounter = _characters.value!!.size
