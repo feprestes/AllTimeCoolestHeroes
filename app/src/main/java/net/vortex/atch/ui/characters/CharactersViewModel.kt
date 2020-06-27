@@ -1,10 +1,12 @@
 package net.vortex.atch.ui.characters
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import net.vortex.atch.data.Result
 import net.vortex.atch.network.Api
 
@@ -48,6 +50,8 @@ class CharactersViewModel : ViewModel() {
                 _characters.value = listResult.data.results
                 var apiCharacterResponseCounter = listResult.data.count
 
+                _status.value = ApiStatus.DONE
+
                 while (apiCharacterResponseCounter < listResult.data.total) {
                     getCharactersData =
                         Api.retrofitService.getData(offset = _characters.value!!.size)
@@ -56,8 +60,6 @@ class CharactersViewModel : ViewModel() {
                     _characters.value = _characters.value!! + listResult.data.results
                     apiCharacterResponseCounter = _characters.value!!.size
                 }
-
-                _status.value = ApiStatus.DONE
             } catch (e: Exception) {
                 _status.value = ApiStatus.ERROR
                 _characters.value = ArrayList()

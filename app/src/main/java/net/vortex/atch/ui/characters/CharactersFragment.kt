@@ -1,13 +1,12 @@
 package net.vortex.atch.ui.characters
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import net.vortex.atch.R
 import net.vortex.atch.databinding.FragmentCharactersBinding
 
 class CharactersFragment : Fragment() {
@@ -40,5 +39,10 @@ class CharactersFragment : Fragment() {
 
         setHasOptionsMenu(true)
         return binding.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.characters_fragment_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 }
