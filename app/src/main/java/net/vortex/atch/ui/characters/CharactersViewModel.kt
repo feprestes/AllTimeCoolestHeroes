@@ -2,6 +2,7 @@ package net.vortex.atch.ui.characters
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,6 +18,9 @@ class CharactersViewModel : ViewModel() {
     // Internal MuttableLiveData that stores the most recent response
     private val _characters = MutableLiveData<List<Result>>()
     private val _status = MutableLiveData<ApiStatus>()
+
+    // Filtered list
+    private val _charactersFilter = MutableLiveData<List<Result>>()
 
     private val _navigateToSelectedCharacter = MutableLiveData<Result>()
 
@@ -37,6 +41,7 @@ class CharactersViewModel : ViewModel() {
 
     init {
         getCharacters()
+        getFilteredList("Alpha")
     }
 
     private fun getCharacters() {
@@ -47,25 +52,62 @@ class CharactersViewModel : ViewModel() {
                 var getCharactersData = Api.retrofitService.getData()
                 var listResult = getCharactersData
 
-                _characters.value = listResult.data.results
+                _charactersFilter.value = listResult.data.results
                 var apiCharacterResponseCounter = listResult.data.count
-
-                _status.value = ApiStatus.DONE
 
                 while (apiCharacterResponseCounter < listResult.data.total) {
                     getCharactersData =
-                        Api.retrofitService.getData(offset = _characters.value!!.size)
+                        Api.retrofitService.getData(offset = _charactersFilter.value!!.size)
                     listResult = getCharactersData
 
-                    _characters.value = _characters.value!! + listResult.data.results
-                    apiCharacterResponseCounter = _characters.value!!.size
+                    _charactersFilter.value = _charactersFilter.value!! + listResult.data.results
+
+                    apiCharacterResponseCounter = _charactersFilter.value!!.size
                 }
+
+                _characters.value = _charactersFilter.value
+                _status.value = ApiStatus.DONE
             } catch (e: Exception) {
                 _status.value = ApiStatus.ERROR
                 _characters.value = ArrayList()
+                _charactersFilter.value = ArrayList()
             }
         }
     }
+
+    fun getFilteredList(s: String) : Boolean {
+        if(s.isNullOrEmpty()){
+            cleanSearch()
+        } else {
+            cleanSearch()
+            _characters.value = _charactersFilter.value?.filter { it.name.toLowerCase().contains(s) }
+        }
+        return true
+    }
+
+    fun cleanSearch() {
+        _characters.value = _charactersFilter.value
+    }
+
+//    fun getFilteredList(s: String): LiveData<List<Result>> {
+//        _characters.value = _characters.value?.filter { it.name.toLowerCase().contains(s) }
+//        return _characters
+//        return Transformations.map(_characters) {
+//            it.filter {
+//                it.name.contains(s)
+//            }
+//        }
+//    }
+
+//    fun getFilteredList(s: String): Boolean {
+//        _characters.value = _characters.value?.filter { it.name.equals(s) }
+////        return Transformations.map(_characters) {
+////            it.filter {
+////                it.name.contains(s)
+////            }
+////        }
+//        return true
+//    }
 
     override fun onCleared() {
         super.onCleared()

@@ -1,7 +1,10 @@
 package net.vortex.atch.ui.characters
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import android.widget.SearchView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -22,9 +25,9 @@ class CharactersFragment : Fragment() {
     ): View? {
         val binding = FragmentCharactersBinding.inflate(inflater)
 
-        binding.setLifecycleOwner(this)
-
         binding.viewModel = charactersViewModel
+
+        binding.setLifecycleOwner(this)
 
         binding.imageGrid.adapter = PhotoGridAdapter(PhotoGridAdapter.OnClickListener {
             charactersViewModel.displayCharacterDetails(it)
@@ -43,6 +46,26 @@ class CharactersFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.characters_fragment_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
+
+        val searchItem = menu.findItem(R.id.action_search)
+        val searchView = searchItem?.actionView as SearchView
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query != null) {
+                    charactersViewModel.getFilteredList(query)
+                } else {
+                    charactersViewModel.cleanSearch()
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText != null) {
+                    charactersViewModel.getFilteredList(newText)
+                }
+                return false
+            }
+        })
     }
 }
