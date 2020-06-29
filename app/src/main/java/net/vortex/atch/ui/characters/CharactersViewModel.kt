@@ -2,7 +2,6 @@ package net.vortex.atch.ui.characters
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -88,26 +87,6 @@ class CharactersViewModel : ViewModel() {
     fun cleanSearch() {
         _characters.value = _charactersFilter.value
     }
-
-//    fun getFilteredList(s: String): LiveData<List<Result>> {
-//        _characters.value = _characters.value?.filter { it.name.toLowerCase().contains(s) }
-//        return _characters
-//        return Transformations.map(_characters) {
-//            it.filter {
-//                it.name.contains(s)
-//            }
-//        }
-//    }
-
-//    fun getFilteredList(s: String): Boolean {
-//        _characters.value = _characters.value?.filter { it.name.equals(s) }
-////        return Transformations.map(_characters) {
-////            it.filter {
-////                it.name.contains(s)
-////            }
-////        }
-//        return true
-//    }
 
     override fun onCleared() {
         super.onCleared()

@@ -1,10 +1,8 @@
 package net.vortex.atch.ui.characters
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -52,11 +50,11 @@ class CharactersFragment : Fragment() {
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                if (query != null) {
-                    charactersViewModel.getFilteredList(query)
-                } else {
-                    charactersViewModel.cleanSearch()
-                }
+//                if (query != null) {
+//                    charactersViewModel.getFilteredList(query)
+//                } else {
+//                    charactersViewModel.cleanSearch()
+//                }
                 return false
             }
 
@@ -64,8 +62,23 @@ class CharactersFragment : Fragment() {
                 if (newText != null) {
                     charactersViewModel.getFilteredList(newText)
                 }
-                return false
+                return true
             }
         })
+
+        searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                searchView.queryHint = getString(R.string.search)
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                searchView.setQuery("", false)
+                charactersViewModel.cleanSearch()
+                return true
+            }
+        })
+
+        super.onCreateOptionsMenu(menu, inflater)
     }
 }
