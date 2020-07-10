@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import net.vortex.atch.data.Result
 import net.vortex.atch.databinding.GridViewItemBinding
+import net.vortex.atch.util.EspressoIdlingResource
 
 class PhotoGridAdapter(private val onClickListener: OnClickListener ) : ListAdapter<Result,
         PhotoGridAdapter.CharacterViewHolder>(DiffCallback) {
@@ -23,11 +24,13 @@ class PhotoGridAdapter(private val onClickListener: OnClickListener ) : ListAdap
     }
 
     override fun onBindViewHolder(holder: PhotoGridAdapter.CharacterViewHolder, position: Int) {
+        EspressoIdlingResource.countingIdlingResource.increment()
         val character = getItem(position)
         holder.itemView.setOnClickListener {
             onClickListener.onClick(character)
         }
         holder.bind(character)
+        EspressoIdlingResource.countingIdlingResource.decrement()
     }
 
     companion object DiffCallback : DiffUtil.ItemCallback<Result>() {
@@ -46,8 +49,10 @@ class PhotoGridAdapter(private val onClickListener: OnClickListener ) : ListAdap
     ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(result: Result) {
+            EspressoIdlingResource.countingIdlingResource.increment()
             binding.character = result
             binding.executePendingBindings()
+            EspressoIdlingResource.countingIdlingResource.decrement()
         }
     }
 

@@ -1,13 +1,28 @@
 package net.vortex.atch.ui.favorites
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import net.vortex.atch.database.AppDatabase
+import net.vortex.atch.database.characters.Character
+import net.vortex.atch.database.characters.CharacterRepository
 
-class FavoritesViewModel : ViewModel() {
+class FavoritesViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is favorites Fragment"
+    private val repository: CharacterRepository
+
+    val allCharacters: LiveData<List<Character>>
+
+    init {
+        val characterDao = AppDatabase.getDatabase(application).characterDao()
+        repository = CharacterRepository(characterDao)
+        allCharacters = repository.allCharacters
     }
-    val text: LiveData<String> = _text
+
+    fun insert(character: Character) = viewModelScope.launch(Dispatchers.IO){
+        repository.insert(character)
+    }
 }

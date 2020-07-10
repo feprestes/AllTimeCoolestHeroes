@@ -9,6 +9,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import net.vortex.atch.data.Result
 import net.vortex.atch.network.Api
+import net.vortex.atch.util.EspressoIdlingResource
 
 enum class ApiStatus { LOADING, ERROR, DONE }
 
@@ -40,19 +41,23 @@ class CharactersViewModel : ViewModel() {
 
     init {
         getCharacters()
-        getFilteredList("Alpha")
     }
 
     private fun getCharacters() {
         coroutineScope.launch {
             try {
+                EspressoIdlingResource.countingIdlingResource.increment()
                 _status.value = ApiStatus.LOADING
 
                 var getCharactersData = Api.retrofitService.getData()
                 var listResult = getCharactersData
 
                 _charactersFilter.value = listResult.data.results
+                _characters.value = _charactersFilter.value
+
                 var apiCharacterResponseCounter = listResult.data.count
+
+                _status.value = ApiStatus.DONE
 
                 while (apiCharacterResponseCounter < listResult.data.total) {
                     getCharactersData =
@@ -60,17 +65,16 @@ class CharactersViewModel : ViewModel() {
                     listResult = getCharactersData
 
                     _charactersFilter.value = _charactersFilter.value!! + listResult.data.results
+                    _characters.value = _charactersFilter.value
 
                     apiCharacterResponseCounter = _charactersFilter.value!!.size
                 }
-
-                _characters.value = _charactersFilter.value
-                _status.value = ApiStatus.DONE
             } catch (e: Exception) {
                 _status.value = ApiStatus.ERROR
                 _characters.value = ArrayList()
                 _charactersFilter.value = ArrayList()
             }
+            EspressoIdlingResource.countingIdlingResource.decrement()
         }
     }
 

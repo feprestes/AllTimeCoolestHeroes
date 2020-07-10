@@ -8,24 +8,41 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import net.vortex.atch.R
+import net.vortex.atch.databinding.FragmentCharactersBinding
+import net.vortex.atch.ui.characters.CharactersFragmentDirections
+import net.vortex.atch.ui.characters.CharactersViewModel
+import net.vortex.atch.ui.characters.PhotoGridAdapter
 
 class FavoritesFragment : Fragment() {
 
-    private lateinit var favoritesViewModel: FavoritesViewModel
+    private val charactersViewModel by lazy {
+        ViewModelProviders.of(this).get(CharactersViewModel::class.java)
+    }
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        favoritesViewModel =
-                ViewModelProviders.of(this).get(FavoritesViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_favorites, container, false)
-        val textView: TextView = root.findViewById(R.id.text_favorites)
-        favoritesViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
+        val binding = FragmentCharactersBinding.inflate(inflater)
+
+        binding.viewModel = charactersViewModel
+
+        binding.setLifecycleOwner(this)
+
+        binding.imageGrid.adapter = PhotoGridAdapter(PhotoGridAdapter.OnClickListener {
+            charactersViewModel.displayCharacterDetails(it)
         })
-        return root
+
+        charactersViewModel.navigateToSelectedCharacter.observe(viewLifecycleOwner, Observer {
+            if (null != it) {
+                this.findNavController().navigate(CharactersFragmentDirections.actionShowDetail(it))
+                charactersViewModel.displayCharacterDetailsComplete()
+            }
+        })
+
+        return binding.root
     }
 }

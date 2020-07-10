@@ -9,8 +9,8 @@ data class Character(
     val id: Int,
     val name: String,
     val description: String,
-    val thumbnail_path: String,
-    val thumbnail_extension: String
+    val thumbnail_path: String
+//    val thumbnail_extension: String
 )
 
 //fun List<Character>.asDomainModel(): List<Result> {
